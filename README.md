@@ -47,7 +47,7 @@ kubectl rollout restart deployment <DEPLOYMENT>
 
 Lists the URLs for the services in your local cluster
 ```shell
-minikube service list 
+minikube service list
 ```
 
 MySQL restore
@@ -55,5 +55,5 @@ MySQL restore
 kubectl port-forward news-importer-mysql-<POD> 3306:3306
 ```
 ```shell
-mysql -u silver -h 127.0.0.1 -p Noticias2011 < docker/mysqldump.news.sql 
+mysql -u silver -h 127.0.0.1 -p db < docker/dump.sql
 ```

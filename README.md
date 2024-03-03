@@ -1,4 +1,4 @@
-# News Importer Micro Services
+# News Importer Microservice
 
 ## Build and run images manually
 ```shell

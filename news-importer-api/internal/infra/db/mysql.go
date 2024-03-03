@@ -3,8 +3,9 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"log"
+
+	_ "github.com/go-sql-driver/mysql"
 	"silver.com/internal/infra/env"
 )
 
@@ -35,5 +36,5 @@ func getDSN() string {
 		env.GetString("MYSQL_PASSWORD", "silver"),
 		env.GetString("MYSQL_HOST", "localhost"),
 		env.GetString("MYSQL_PORT", "3306"),
-		env.GetString("MYSQL_DATABASE", "Noticias2011"))
+		env.GetString("MYSQL_DATABASE", "db"))
 }

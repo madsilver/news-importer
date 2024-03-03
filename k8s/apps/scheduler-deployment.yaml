@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-importer-scheduler
+spec:
+  selector:
+    matchLabels:
+      app: news-importer-scheduler
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: news-importer-scheduler
+    spec:
+      containers:
+        - name: news-importer-scheduler
+          image: madsilver/news-importer-scheduler:1.0.0
+          env:
+            - name: RABBITMQ_HOST
+              value: news-importer-rabbitmq
+            - name: API_HOST
+              value: news-importer-api
+          command: ["./news-importer-scheduler"]
+          imagePullPolicy: Always
+

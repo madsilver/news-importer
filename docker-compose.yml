@@ -1,0 +1,80 @@
+version: "3"
+services:
+
+  api:
+    build: ./news-importer-api/
+    container_name: news_importer_api
+    ports:
+      - '8000:8000'
+    environment:
+      MYSQL_HOST: mysql
+    networks:
+      - news-importer
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  worker:
+    build: ./news-importer-worker/
+    container_name: news_importer_worker
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      API_HOST: 'http://api:8000/v1'
+    networks:
+      - news-importer
+    depends_on:
+      api:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+  scheduler:
+    build: ./news-importer-scheduler/
+    container_name: news_importer_scheduler
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      API_HOST: 'api'
+    networks:
+      - news-importer
+    depends_on:
+      api:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+  mysql:
+    image: mysql/mysql-server:5.6
+    container_name: news_importer_mysql
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: silver
+      MYSQL_USER: silver
+      MYSQL_PASSWORD: silver
+      MYSQL_DATABASE: Noticias2011
+    volumes:
+      - './docker/mysqldump.news.sql:/docker-entrypoint-initdb.d/mysqldump.news.sql'
+      - 'news-importer-mysql:/data/application'
+    networks:
+      - news-importer
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: news_importer_rabbimq
+    networks:
+      - news-importer
+    environment:
+      - RABBITMQ_DEFAULT_USER=sapo
+      - RABBITMQ_DEFAULT_PASS=sapo
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+networks:
+  news-importer:
+    driver: bridge
+volumes:
+  news-importer-mysql:
+    driver: local
+  news-importer-redis:
+    driver: local

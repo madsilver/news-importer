@@ -1,0 +1,59 @@
+#!/bin/bash
+
+usage() {
+    echo -ne "Usage: ./setup [option]
+    options:
+        -s : start istio configurations
+        -i : infrastructure deployment
+        -a : applications deployment\n"
+    exit
+}
+
+startIstio() {
+    kubectl apply -f k8s/istio-init.yaml
+    kubectl apply -f k8s/istio-minikube.yaml
+    kubectl apply -f k8s/label-default-namespace.yaml
+    kubectl apply -f k8s/kiali-secrets.yaml
+}
+
+infraDeploy() {
+    kubectl apply -f k8s/infra/mysql-secrets.yaml
+    kubectl apply -f k8s/infra/mysql-deployment.yaml
+    kubectl apply -f k8s/infra/rabbitmq-secrets.yaml
+    kubectl apply -f k8s/infra/rabbitmq-deployment.yaml
+}
+
+appDeploy() {
+  kubectl apply -f k8s/apps/api-deployment.yaml
+  kubectl apply -f k8s/apps/worker-deployment.yaml
+  kubectl apply -f k8s/apps/scheduler-deployment.yaml
+  kubectl apply -f k8s/istio-rules-headers.yaml
+}
+
+if [ $@ ]; then
+    while getopts "siah" opt; do
+        case $opt in
+            s)
+                startIstio
+                shift
+                ;;
+            i)
+                infraDeploy
+                shift
+                ;;
+            a)
+                appDeploy
+                shift
+                ;;
+            h)
+                usage
+                exit 0
+                ;;
+            \?)
+                ;;
+        esac
+    done
+else
+    usage
+    exit 0
+fi

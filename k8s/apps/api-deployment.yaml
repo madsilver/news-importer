@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-importer-api
+spec:
+  selector:
+    matchLabels:
+      app: news-importer-api
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: news-importer-api
+        version: 1.0.0
+    spec:
+      containers:
+        - name: news-importer-api
+          image: madsilver/news-importer-api:1.0.0
+          env:
+            - name: MYSQL_HOST
+              value: news-importer-mysql
+          command: ["./news-importer-api"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: news-importer-api-pr
+spec:
+  selector:
+    matchLabels:
+      app: news-importer-api
+  replicas: 1
+  template: # template for the pods
+    metadata:
+      labels:
+        app: news-importer-api
+        version: PR-1
+    spec:
+      containers:
+        - name: news-importer-api
+          image: madsilver/news-importer-api:1.0.0
+          env:
+            - name: MYSQL_HOST
+              value: news-importer-mysql
+          command: ["./news-importer-api"]
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: news-importer-api
+spec:
+  type: ClusterIP #NodePort
+  selector:
+    app: news-importer-api
+  ports:
+    - name: http
+      port: 8000

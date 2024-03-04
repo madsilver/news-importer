@@ -64,8 +64,8 @@ services:
     networks:
       - news-importer
     environment:
-      - RABBITMQ_DEFAULT_USER=sapo
-      - RABBITMQ_DEFAULT_PASS=sapo
+      - RABBITMQ_DEFAULT_USER=silver
+      - RABBITMQ_DEFAULT_PASS=silver
     ports:
       - "5672:5672"
       - "15672:15672"

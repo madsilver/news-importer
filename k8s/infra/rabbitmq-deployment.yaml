@@ -17,7 +17,7 @@ spec:
           image: rabbitmq:3-management-alpine
           env:
             - name: RABBITMQ_DEFAULT_USER
-              value: sapo
+              value: silver
             - name: RABBITMQ_DEFAULT_PASS
               valueFrom:
                 secretKeyRef:

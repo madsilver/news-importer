@@ -38,8 +38,8 @@ func NewRabbitMQ() *RabbitMQ {
 
 func getDSN() string {
 	return fmt.Sprintf("amqp://%s:%s@%s:%s",
-		env.GetString("RABBITMQ_USER", "sapo"),
-		env.GetString("RABBITMQ_PASSWORD", "sapo"),
+		env.GetString("RABBITMQ_USER", "silver"),
+		env.GetString("RABBITMQ_PASSWORD", "silver"),
 		env.GetString("RABBITMQ_HOST", "localhost"),
 		env.GetString("RABBITMQ_PORT", "5672"))
 }
